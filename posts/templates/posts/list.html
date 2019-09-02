@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block navigation %}
+    {% include 'posts/navigation.html' %}
+{% endblock %}
+{% block content %}
+    {% if posts %}
+        {% for post in posts %}
+        <div class="card mt-2">
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text">{{ post.body|truncatechars:200 }}</p>
+                <a href="{% url 'posts:details_view' pk=post.id %}" class="btn btn-primary">Details</a>
+                {% if post.author == request.user%}
+                    <a href="{% url 'posts:update_view' pk=post.id %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url 'posts:delete_view' pk=post.id %}" class="btn btn-danger">Delete</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% if is_paginated %}
+        <ul class="pagination pagination-lg justify-content-center mt-2">
+            {% for page_num in paginator.page_range %}
+                {% if page_num <= page_obj.number|add:5 and page_num >= page_obj.number|add:-5 %}
+                    {% if page_obj.number == page_num %}
+                    <li class="page-item active" aria-current="page">
+                        <span  class="page-link">
+                            {{ page_num }}
+                        </span>
+                    </li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a></li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+        {% endif %}
+    {% else %}
+        <h1 class="text-center text-muted">Here goes nothing.</h1>
+    {% endif %}
+{% endblock %}

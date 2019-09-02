@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block navigation %}
+    {% include 'posts/navigation.html' %}
+{% endblock %}
+{% block content %}
+    <form method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="jumbotron">
+            <div class="form-group">
+                <h3>Enter some title here:</h3>
+                <p>{{ form.title }}</p>
+                <h3>Description:</h3>
+                <p>{{ form.body }}</p>
+                <label>Upload an image:</label>
+                <p>{{ form.post_image }}</p>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+{% endblock %}
+
+
+

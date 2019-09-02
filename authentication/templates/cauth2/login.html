@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% if user.is_authenticated %}
+        <a class="nav-item nav-link" href="{% url 'accounts:logout' %}">Logout</a>
+{#        <h1>Hello {{ user }}. You can now see <a href="{% url 'posts:list_view' %}"> posts</a>></h1>#}
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="jumbotron">
+                <h1>Login</h1>
+                <hr class="my-4">
+                <div class="form-group">
+                {% for elem in form.visible_fields %}
+                    <label>{{ elem.label }}:</label>
+                    <br>
+                    <p>{{ elem }}</p>
+                {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary">Sign In</button>
+                <a href="{% url 'accounts:signup' %}" class="btn btn-primary">Sing Up</a>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}

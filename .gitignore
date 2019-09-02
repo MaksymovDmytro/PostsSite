@@ -1,0 +1,16 @@
+# Files
+*.pyc
+
+# DBs
+*_db
+db.sqlite3
+
+# Folders
+.idea
+venv
+__pycache__
+media_storage
+migrations
+!*migrations/__init__.py
+
+

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form method="POST">
+        <form method="post">
+            {% csrf_token %}
+            <div class="jumbotron">
+                <h1>Sign Up</h1>
+                <hr class="my-4">
+                <div class="form-group">
+                {% for elem in form.visible_fields %}
+                    <label>{{ elem.label }}:</label>
+                    <br>
+                    <p>{{ elem }}</p>
+                {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary">Sing Up</button>
+                <a href="{% url 'accounts:login' %}" class="btn btn-secondary">Back</a>
+            </div>
+        </form>
+    </form>
+{% endblock %}

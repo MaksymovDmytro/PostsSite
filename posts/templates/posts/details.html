@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block navigation %}
+    {% include 'posts/navigation.html' %}
+{% endblock %}
+{% include 'posts/navigation.html' %}
+{% block content %}
+    <div class="jumbotron">
+        <div class="text-center">
+        {% if object.post_image %}
+            <img src="{{ object.post_image.url }}" class="img-fluid mx-auto">
+        {% endif %}
+        </div>
+        <h1 class="display-4">{{ object.title }}</h1>
+        <p class="lead">{{ object.autor }}</p>
+        <hr class="my-4">
+        <p class="text-justify">{{ object.body|linebreaks }}</p>
+        <form action="{% url 'posts:likes_view' pk=object.id %}" method="post">{% csrf_token %}
+            <button type="submit"  {% if is_liked %}
+                class="btn btn-info">
+            {% else %}
+                class="btn btn-primary">
+            {% endif %}
+            {{ likes_count }} liked</button>
+            {% if object.author == request.user %}
+            <div class="btn-group float-right" role="group" aria-label="Basic example">
+                <a class="btn btn-warning" href="{% url 'posts:update_view' pk=post.id %}" >Edit</a>
+                    <!-- Button trigger modal -->
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
+                  Delete
+                </button>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+    <p>
+        <a class="btn btn-secondary btn-lg" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Show/Hide comments</a>
+    </p>
+    <div class="row">
+        <div class="col">
+            <div class="collapse multi-collapse" id="multiCollapseExample1">
+            {% for comment in post.comments.all %}
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <strong class="mr-auto">{{ comment.author.first_name }} {{ comment.author.last_name }}</strong>
+                        <small> on {{ comment.created_timestamp }}</small>
+                        <p>{{ comment.comment|linebreaks }}</p>
+                    </div>
+                </div>
+            {% empty %}
+            <p>No comments here yet :(</p>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+    <hr class="my-4">
+    <div class="container">
+        <form action="{% url 'posts:comment_view' pk=object.id %}" method="post">{% csrf_token %}
+            <div class="input-group">
+                <div class="input-group-prepend">
+                <button class="input-group-text">Comment</button>
+            </div>
+                {{ form.comment }}
+            </div>
+        </form>
+    <hr class="my-4">
+    </div>
+<!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Please, confirm delete.</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Areyou sure you want to delete this post?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <a class="btn btn-danger" href="{% url 'posts:delete_view' pk=post.id %}" >Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
